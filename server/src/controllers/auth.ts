@@ -2,6 +2,7 @@ import User, { IUser } from "../models/UserModel"
 import { generateToken } from "../utils/generateToken"
 import bcrypt from "bcryptjs"
 import { Request, Response } from 'express'
+import { HTTP_STATUS } from "../utils/statusCodes"
 
 interface AuthenticatedRequest extends Request{
     user?: IUser
@@ -19,13 +20,13 @@ export const registerUser = async (req: Request, res: Response):Promise<void> =>
         
         //improve: remove this validation and add in Frontend 
         if (!name || !phone || !password) {
-            res.status(400).json({ message: "Name , Phone and password are required" })
+            res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Name , Phone and password are required" })
             return
         }
 
         const userExists = await User.findOne({ $or: [{ email }, { phone }] })
         if (userExists) {
-            res.status(409).json({ message: "User already exists" })
+            res.status(HTTP_STATUS.CONFLICT).json({ message: "User already exists" })
             return
         }
 
@@ -51,7 +52,7 @@ export const registerUser = async (req: Request, res: Response):Promise<void> =>
             sameSite: 'strict', 
             maxAge : 3*24*60*60*1000 // 3 days
         })
-        res.status(201).json({
+        res.status(HTTP_STATUS.CREATED).json({
             message: "User registered successfully", 
             data: {
                 user: userResponse,  // can add token if given in headers
@@ -61,7 +62,7 @@ export const registerUser = async (req: Request, res: Response):Promise<void> =>
     }
     catch (err) {
         console.error("Registration error: " ,err)
-        res.status(500).json({ message: "Server error" })
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Server error" })
         return
     }
 }
@@ -76,7 +77,7 @@ export const loginUser = async (req: Request, res: Response) :Promise<void> => {
         })
 
         if (!user) {
-            res.status(401).json({
+            res.status(HTTP_STATUS.UNAUTHORIZED).json({
                 message:"Invalid credentials"
             })
             return 
@@ -85,7 +86,7 @@ export const loginUser = async (req: Request, res: Response) :Promise<void> => {
         const isPasswordValid = await bcrypt.compare(password, user.password)
         
         if (!isPasswordValid) {
-            res.status(401).json({
+            res.status(HTTP_STATUS.UNAUTHORIZED).json({
                 message:"Invalid credentials"
             })
             return 
@@ -107,7 +108,7 @@ export const loginUser = async (req: Request, res: Response) :Promise<void> => {
             sameSite: 'strict', 
             maxAge : 3*24*60*60*1000 // 3 days
         })
-        res.status(200).json({
+        res.status(HTTP_STATUS.OK).json({
             message: "Login successful", 
             data: {
                 user:userResponse
@@ -117,7 +118,7 @@ export const loginUser = async (req: Request, res: Response) :Promise<void> => {
     }
     catch (err) {
         console.error("Login error : ", err)
-        res.status(500).json({
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
             message:"Internal server error"
         })
         return
@@ -128,10 +129,10 @@ export const loginUser = async (req: Request, res: Response) :Promise<void> => {
 export const getUserProfile = async (req:Request, res: Response):Promise<void>  => { 
     const user = (req as AuthenticatedRequest).user
     if (!user) {
-        res.status(401).json({ message: "Invalid session" })
+        res.status(HTTP_STATUS.UNAUTHORIZED).json({ message: "Invalid session" })
         return
     }
-    res.status(200).json(user)
+    res.status(HTTP_STATUS.OK).json(user)
     return
 }
 
@@ -144,5 +145,5 @@ export const logoutUser = (req: Request, res: Response) => {
         maxAge: 0
     })
 
-    res.status(200).json({message:"Logged out successfully"})
+    res.status(HTTP_STATUS.OK).json({message:"Logged out successfully"})
 }
