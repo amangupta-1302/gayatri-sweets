@@ -9,9 +9,11 @@ export const addProduct = async (req: Request, res: Response) :Promise <void>=> 
     try {
         const { name, description, price, imageUrl, stock } = req.body
 
+
         const product = await addNewProduct({
             name, description, price, imageUrl, stock
         })
+
 
         res.status(HTTP_STATUS.CREATED).json({ message: "Product added", product })
         return
@@ -28,6 +30,7 @@ export const updateProduct = async (req: Request, res: Response):Promise <void> 
     try {
         const { name, description, price, imageUrl, stock, isAvailable } = req.body
         
+
         const updated = await updateProductbyId(
             req.params.id, {
                 name , description , price , imageUrl , stock , isAvailable
@@ -39,7 +42,7 @@ export const updateProduct = async (req: Request, res: Response):Promise <void> 
             return
         }
 
-        res.status(HTTP_STATUS.OK).json({ message: "Product updated", product: updated });
+        res.status(HTTP_STATUS.OK).json({ message: "Product updated", product: updated })
         return
     }
     catch (err) {
@@ -53,8 +56,8 @@ export const updateProduct = async (req: Request, res: Response):Promise <void> 
 // delete product 
 export const deleteProduct = async (req: Request, res: Response):Promise <void> => {
     try {
-        const deleted = await deleteProductbyId(req.params.id)
 
+        const deleted = await deleteProductbyId(req.params.id)
         if (!deleted) {
             res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Product not found" })
             return
@@ -79,8 +82,6 @@ export const getAllProducts = async (req: Request, res: Response): Promise<void>
 }
 
 export const getProductbyId = async (req: Request, res: Response): Promise<void> => {
-    
 }
-
-
 //#endregion
+
