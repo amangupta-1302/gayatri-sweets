@@ -1,11 +1,33 @@
-import express from "express"
+import express , {Request , Response , Router} from "express"
 import dotenv from "dotenv"
+import auth from "./routes/auth"
+import products from "./routes/products"
+import cookieParser from "cookie-parser"
+import { connectDB } from "./config/db_connection"
+import { HTTP_STATUS } from "./utils/statusCodes"
+
+dotenv.config()
 
 const server = express()
-dotenv.config()
+
+//middlewares
+server.use(express.json())
+server.use(cookieParser())
+
+server.get("/health", (req:Request, res: Response) : void => {
+    res.status(HTTP_STATUS.OK).json({
+        message:"Server is running"
+    })
+})
+
+
+//API routes
+server.use("/auth", auth)
+server.use("/products", products)
 
 const PORT = process.env.PORT
 
 server.listen(PORT, () => {
-    console.log("Server listen on PORT :" , PORT)
+    console.log("Server listen on PORT :", PORT)
+    connectDB()
 })
