@@ -2,15 +2,15 @@ import express from "express"
 import {loginUser , registerUser , getUserProfile , logoutUser}  from "../controllers/auth"
 import { protectRoute } from "../middlewares/protectRoute"
 
+const authRouter = express.Router()
 
-const router = express.Router()
-
-router.post("/login", loginUser)
-router.post("/register", registerUser)
-router.get("/profile", protectRoute, getUserProfile) 
-router.get("/logout" , logoutUser)
+authRouter.post("/login", loginUser)
+authRouter.post("/register", registerUser)
+authRouter.get("/profile", protectRoute, getUserProfile) 
+authRouter.get("/logout" , logoutUser)
 
 
-export default router
+export default authRouter
+
 
 

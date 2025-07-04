@@ -1,7 +1,7 @@
 import express , {Request , Response , Router} from "express"
 import dotenv from "dotenv"
-import auth from "./routes/auth"
-import products from "./routes/products"
+import authRouter from "./routes/auth"
+import productRouter from "./routes/products"
 import cookieParser from "cookie-parser"
 import { connectDB } from "./config/db_connection"
 import { HTTP_STATUS } from "./utils/statusCodes"
@@ -22,8 +22,8 @@ server.get("/health", (req:Request, res: Response) : void => {
 
 
 //API routes
-server.use("/auth", auth)
-server.use("/products", products)
+server.use("/auth", authRouter)
+server.use("/products", productRouter)
 
 const PORT = process.env.PORT
 

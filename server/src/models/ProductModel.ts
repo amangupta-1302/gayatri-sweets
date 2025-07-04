@@ -14,7 +14,7 @@ const productSchema = new Schema<IProduct>({
     name: { type: String, required: true }, 
     description: { type: String }, 
     price: { type: Number, required: true }, 
-    imageUrl: { type: String, required: true }, 
+    imageUrl: { type: String},  // todo: will make this required 
     stock: { type: Number, default: 0 },
     isAvailable: {type: Boolean , default:true}
 },
