@@ -1,5 +1,3 @@
-import { NOTFOUND } from "dns";
-
 export const HTTP_STATUS = {
   OK: 200,                         
   CREATED: 201,                  

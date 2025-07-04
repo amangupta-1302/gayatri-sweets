@@ -3,14 +3,14 @@ import {loginUser , registerUser , getUserProfile , logoutUser}  from "../contro
 import { protectRoute } from "../middlewares/protectRoute"
 
 
-const router = express.Router()
+const authRouter = express.Router()
 
-router.post("/login", loginUser)
-router.post("/register", registerUser)
-router.get("/profile", protectRoute, getUserProfile) 
-router.get("/logout" , logoutUser)
+authRouter.post("/login", loginUser)
+authRouter.post("/register", registerUser)
+authRouter.get("/profile", protectRoute, getUserProfile) 
+authRouter.get("/logout" , logoutUser)
 
 
-export default router
+export default authRouter
 
 
