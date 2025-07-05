@@ -3,7 +3,7 @@ import User, { IUser } from "../models/UserModel"
 import { Request , Response , NextFunction } from "express"
 import { HTTP_STATUS } from "../utils/statusCodes"
 
-interface AuthenticatedRequest extends Request{
+export interface AuthenticatedRequest extends Request{
     user?: IUser
 }
 
