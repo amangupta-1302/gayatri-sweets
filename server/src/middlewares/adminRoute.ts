@@ -1,11 +1,6 @@
-import { NextFunction, Request , Response } from "express";
+import { NextFunction , Response } from "express";
 import { HTTP_STATUS } from "../utils/statusCodes";
-import { IUser } from "../models/UserModel";
-
-
-interface AuthenticatedRequest extends Request{
-    user?: IUser
-}
+import { AuthenticatedRequest } from "./protectRoute";
 
 export const isAdmin = (req: AuthenticatedRequest, res: Response, next: NextFunction)=> {
     try {

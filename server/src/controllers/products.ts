@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { HTTP_STATUS } from "../utils/statusCodes"
-import { addNewProduct  ,updateProductbyId ,deleteProductbyId} from "../services/product"
+import { addNewProduct  ,updateProductbyId ,deleteProductbyId , fetchAllProducts , fetchProductById} from "../services/product"
 
 // #region admin routes
 
@@ -9,11 +9,9 @@ export const addProduct = async (req: Request, res: Response) :Promise <void>=> 
     try {
         const { name, description, price, imageUrl, stock } = req.body
 
-
         const product = await addNewProduct({
             name, description, price, imageUrl, stock
         })
-
 
         res.status(HTTP_STATUS.CREATED).json({ message: "Product added", product })
         return
@@ -29,7 +27,6 @@ export const addProduct = async (req: Request, res: Response) :Promise <void>=> 
 export const updateProduct = async (req: Request, res: Response):Promise <void> => {
     try {
         const { name, description, price, imageUrl, stock, isAvailable } = req.body
-        
 
         const updated = await updateProductbyId(
             req.params.id, {
@@ -56,7 +53,6 @@ export const updateProduct = async (req: Request, res: Response):Promise <void> 
 // delete product 
 export const deleteProduct = async (req: Request, res: Response):Promise <void> => {
     try {
-
         const deleted = await deleteProductbyId(req.params.id)
         if (!deleted) {
             res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Product not found" })
@@ -74,14 +70,37 @@ export const deleteProduct = async (req: Request, res: Response):Promise <void> 
 
 //#endregion
 
-
 //#region customer routes
 
 export const getAllProducts = async (req: Request, res: Response): Promise<void> => {
-    
+    try {
+        const products = await fetchAllProducts()
+        res.status(HTTP_STATUS.OK).json({
+            message: "Products fetched successfully", 
+            products
+        })
+        return
+    }
+    catch (err) {
+        console.error("Error fetching Products: ", err)
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: "Failed to fetch products" })
+        return
+    }
 }
 
 export const getProductbyId = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const product = await fetchProductById(req.params.id)
+
+        if (!product) {
+            res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Product not found" })
+            return
+        }
+    }
+    catch (err) {
+        console.error("Error while fetching product by Id : ",err)
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({message:"Failed to fetch product"})
+    }
 }
 //#endregion
 

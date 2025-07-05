@@ -1,15 +1,9 @@
-
 import { IUser } from "../models/UserModel"
 import { generateToken } from "../utils/generateToken"
-import bcrypt from "bcryptjs"
 import { Request, Response } from 'express'
 import { HTTP_STATUS } from "../utils/statusCodes"
 import { checkIfUserExists , createNewUser , validateUserCredentials} from "../services/auth"
-
-
-interface AuthenticatedRequest extends Request{
-    user?: IUser
-}
+import { AuthenticatedRequest } from "../middlewares/protectRoute"
 
 //registerUser
 export const registerUser = async (req: Request, res: Response):Promise<void> => {
@@ -30,16 +24,9 @@ export const registerUser = async (req: Request, res: Response):Promise<void> =>
             res.status(HTTP_STATUS.CONFLICT).json({ message: "User already exists" })
             return
         }
-
-
         const user:IUser = await createNewUser({ name, email, phone, password })
 
         const token = generateToken(user._id.toString())
-
-        
-
- 
-  
 
         res.cookie('token', token, {
             httpOnly: true, 
@@ -57,8 +44,6 @@ export const registerUser = async (req: Request, res: Response):Promise<void> =>
                 phone: user.phone,
                 role: user.role,
                 addresses : user.addresses  // can add token if given in headers
-              
-
             }
         })
         return
@@ -75,31 +60,25 @@ export const loginUser = async (req: Request, res: Response) :Promise<void> => {
     try {
         const { emailOrPhone, password } = req.body 
         
-
         if (!emailOrPhone || !password) {
             res.status(HTTP_STATUS.BAD_REQUEST).json({ message: "Email/Phone and password are required" });
             return
         }
-        const user  = await validateUserCredentials(emailOrPhone, password)
-
+        const user = await validateUserCredentials(emailOrPhone, password)
         if (!user) {
             res.status(HTTP_STATUS.UNAUTHORIZED).json({
                 message:"Invalid credentials"
             })
             return 
         }
-
-
         const token = generateToken(user._id.toString())
-
-       
+    
         res.cookie('token', token, {
             httpOnly: true, 
             secure: true, 
             sameSite: 'strict', 
             maxAge : 3*24*60*60*1000 // 3 days
         })
-
 
         res.status(HTTP_STATUS.OK).json({
             message: "Login successful", 
@@ -134,7 +113,7 @@ export const getUserProfile = async (req:Request, res: Response):Promise<void>  
     return
 }
 
-
+//logout User
 export const logoutUser = (req: Request, res: Response) => {
     res.clearCookie('token', {
         httpOnly: true, 
