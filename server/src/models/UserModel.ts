@@ -1,15 +1,5 @@
 import mongoose, { Document , Schema, Types } from "mongoose";
-
-//address interface for user addresses
-interface Address {
-    label: string,
-    addressLine: string, 
-    city: string, 
-    state: string, 
-    pincode: string,
-    phone: string, 
-    isDefault?: boolean
-}
+import { addressSchema, IAddress } from "./AddressModel";
 
 //User interface
 export interface IUser extends Document{
@@ -18,37 +8,9 @@ export interface IUser extends Document{
     phone: string, 
     email?: string, 
     password: string, 
-    addresses: Address[], 
+    addresses: mongoose.Types.DocumentArray<IAddress>, 
     role: 'customer'| 'admin'
 }
-
-
-const addressSchema = new Schema<Address>({
-    label: {
-        type: String, default: "Home",
-    },
-    addressLine: {
-        type: String, required: true, 
-    }, 
-    city: {
-        type: String, required: true, 
-    }, 
-    pincode: {
-        type: String, required: true, 
-    }, 
-    state: {
-        type: String, required: true,
-    }, 
-    phone: {
-        type: String, required: true, 
-    }, 
-    isDefault: {
-        type:Boolean, 
-        default: false
-    }
-}, 
-    { _id: false } // to not create sub ids 
-) 
 
 //User schema definition
 const userSchema = new Schema<IUser>({
@@ -74,4 +36,3 @@ const userSchema = new Schema<IUser>({
 
 const User = mongoose.model<IUser>('User', userSchema)
 export default User
-export {Address}
