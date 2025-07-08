@@ -12,7 +12,7 @@ productRouter.delete("/admin/:id" , protectRoute , isAdmin , deleteProduct)
 
 //customer routes
 productRouter.get("/", getAllProducts)
-productRouter.get("/:id([0-9a-fA-F]{24})" , getProductbyId) // to get only mongodb ID
+productRouter.get("/:id" , getProductbyId) // to get only mongodb ID
 
 export default productRouter
 
