@@ -32,7 +32,7 @@ export const protectRoute = async (req: AuthenticatedRequest, res: Response, nex
     }
     catch (err) {
         console.error("Protected middleware error ", err)
-        res.status(HTTP_STATUS.FORBIDDEN).json({ message: "Invalid or expired Token" })
+        res.status(HTTP_STATUS.UNAUTHORIZED).json({ message: "Invalid or expired Token" })
         return
     }
     

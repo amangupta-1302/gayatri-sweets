@@ -7,5 +7,6 @@ export const connectDB = async () : Promise<void>  => {
     }
     catch (err) {
         console.error("Error while connecting to database :", err)
+        process.exit(1)
     }
 }
