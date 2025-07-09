@@ -5,7 +5,10 @@ import { addNewProduct  ,updateProductbyId ,deleteProductbyId , fetchAllProducts
 // #region admin routes
 
 //add new product 
-export const addProduct = async (req: Request, res: Response) :Promise <void>=> {
+export const addProduct = async (req: Request, res: Response): Promise<void> => {
+    /**
+     * Admin only can access and add new product also 
+     */
     try {
         const { name, description, price, imageUrl, stock } = req.body
 
@@ -24,7 +27,10 @@ export const addProduct = async (req: Request, res: Response) :Promise <void>=> 
 }
 
 //edit Product
-export const updateProduct = async (req: Request, res: Response):Promise <void> => {
+export const updateProduct = async (req: Request, res: Response): Promise<void> => {
+    /**
+     * Admin only can access and edit product details 
+     */
     try {
         const { name, description, price, imageUrl, stock, isAvailable } = req.body
 
@@ -51,7 +57,10 @@ export const updateProduct = async (req: Request, res: Response):Promise <void> 
 }
 
 // delete product 
-export const deleteProduct = async (req: Request, res: Response):Promise <void> => {
+export const deleteProduct = async (req: Request, res: Response): Promise<void> => {
+    /**
+     * Admin only can access and delete any specific product 
+     */
     try {
         const deleted = await deleteProductbyId(req.params.id)
         if (!deleted) {
@@ -73,6 +82,9 @@ export const deleteProduct = async (req: Request, res: Response):Promise <void> 
 //#region customer routes
 
 export const getAllProducts = async (req: Request, res: Response): Promise<void> => {
+    /**
+     * Gets all the products listed in Database
+     */
     try {
         const products = await fetchAllProducts()
         res.status(HTTP_STATUS.OK).json({
@@ -89,6 +101,9 @@ export const getAllProducts = async (req: Request, res: Response): Promise<void>
 }
 
 export const getProductbyId = async (req: Request, res: Response): Promise<void> => {
+    /**
+     * Returns specific product by its Id
+     */
     try {
         const product = await fetchProductById(req.params.id)
 
