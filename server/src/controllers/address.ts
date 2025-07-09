@@ -4,7 +4,10 @@ import { AuthenticatedRequest } from "../middlewares/protectRoute";
 import { IAddress } from "../models/AddressModel";
 import {fetchUserAddresses , fetchUserAddressById , deleteUserAddress , updateUserAddress , addNewUserAddress} from "../services/address"
 
+// address controller
+
 export const addNewAddress = async (req: Request, res: Response): Promise<void> => {
+    /* Adds new address to the user and returns all addresses */
     try {
         const user = (req as AuthenticatedRequest).user
         if (!user) {
@@ -60,6 +63,10 @@ export const addNewAddress = async (req: Request, res: Response): Promise<void> 
 }
 
 export const getAllAddress = async (req: Request, res: Response): Promise<void> => {
+    /**
+     Get all user addreseses saved to db 
+     */
+
     const user = (req as AuthenticatedRequest).user
     if (!user) {
         res.status(HTTP_STATUS.UNAUTHORIZED).json({ message: "Unauthorized" });
@@ -77,6 +84,10 @@ export const getAllAddress = async (req: Request, res: Response): Promise<void> 
 }
 
 export const getAddressById = async (req: Request, res: Response): Promise<void> => {
+
+    /**
+    Returns a particular address associated with a specific user
+     */
     try {
         const user = (req as AuthenticatedRequest).user
         if (!user) {
@@ -100,6 +111,10 @@ export const getAddressById = async (req: Request, res: Response): Promise<void>
 }
 
 export const updateAddress = async (req: Request, res: Response): Promise<void> => { 
+
+    /**
+     Updates user address by taking its addressId 
+     */
     const user = (req as AuthenticatedRequest).user
     if (!user) {
         res.status(HTTP_STATUS.UNAUTHORIZED).json({ message: "Unauthorized" });
@@ -118,6 +133,9 @@ export const updateAddress = async (req: Request, res: Response): Promise<void> 
 }
 
 export const deleteAddress = async (req: Request, res: Response): Promise<void> => {
+    /**
+     * Deletes user's specific address by addressId
+     */
     const user = (req as AuthenticatedRequest).user
     if (!user) {
         res.status(HTTP_STATUS.UNAUTHORIZED).json({ message: "Unauthorized" });

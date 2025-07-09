@@ -3,7 +3,7 @@ import { addressSchema, IAddress } from "./AddressModel";
 
 //User interface
 export interface IUser extends Document{
-    _id : Types.ObjectId,
+    _id : mongoose.Types.ObjectId,
     name: string, 
     phone: string, 
     email?: string, 

@@ -5,8 +5,13 @@ import { HTTP_STATUS } from "../utils/statusCodes"
 import { checkIfUserExists , createNewUser , validateUserCredentials} from "../services/auth"
 import { AuthenticatedRequest } from "../middlewares/protectRoute"
 
+
 //registerUser
-export const registerUser = async (req: Request, res: Response):Promise<void> => {
+export const registerUser = async (req: Request, res: Response): Promise<void> => {
+    
+    /**
+     * Takes request body and adds new user to the database and returns its details except password
+     */
     try {
         const { name, phone, email, password } = req.body as {
             name: string,
@@ -43,7 +48,7 @@ export const registerUser = async (req: Request, res: Response):Promise<void> =>
                 email: user.email,
                 phone: user.phone,
                 role: user.role,
-                addresses : user.addresses  // can add token if given in headers
+                addresses : user.addresses 
             }
         })
         return
@@ -56,7 +61,10 @@ export const registerUser = async (req: Request, res: Response):Promise<void> =>
 }
 
 //loginUser
-export const loginUser = async (req: Request, res: Response) :Promise<void> => { 
+export const loginUser = async (req: Request, res: Response): Promise<void> => { 
+    /**
+     * Takes email & password or phone Number & Otp to login user
+     */
     try {
         const { emailOrPhone, password } = req.body 
         
@@ -102,8 +110,11 @@ export const loginUser = async (req: Request, res: Response) :Promise<void> => {
     }
 }
 
-//getUserProfile
-export const getUserProfile = async (req:Request, res: Response):Promise<void>  => { 
+//check authenticated User
+export const checkAuthUser = async (req: Request, res: Response): Promise<void> => { 
+    /**
+     * Returns the logged in User to check if user is authenticated/logged in 
+     */
     const user = (req as AuthenticatedRequest).user
     if (!user) {
         res.status(HTTP_STATUS.UNAUTHORIZED).json({ message: "Invalid session" })
@@ -115,6 +126,9 @@ export const getUserProfile = async (req:Request, res: Response):Promise<void>  
 
 //logout User
 export const logoutUser = (req: Request, res: Response) => {
+    /**
+     * logs out user 
+     */
     res.clearCookie('token', {
         httpOnly: true, 
         sameSite: "strict", 
@@ -123,4 +137,16 @@ export const logoutUser = (req: Request, res: Response) => {
     })
 
     res.status(HTTP_STATUS.OK).json({message:"Logged out successfully"})
+}
+
+//get User profile details 
+export const getUserProfile = (req: Request, res: Response) => {
+
+    /**
+     * Returns all the user details having email phone , password (user can update password also )
+     */
+    
+    // implement to show the logged in user details , his address (its management also)
+
+    // later user can update his password also
 }
