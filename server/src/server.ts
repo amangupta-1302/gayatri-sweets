@@ -1,33 +1,45 @@
-import express , {Request , Response , Router} from "express"
+import express from "express"
 import dotenv from "dotenv"
 import authRouter from "./routes/auth"
 import productRouter from "./routes/products"
 import cookieParser from "cookie-parser"
 import { connectDB } from "./config/db_connection"
 import { HTTP_STATUS } from "./utils/statusCodes"
+import cors from "cors"
 
 dotenv.config()
 
 const server = express()
 
-//middlewares
+// Basic middlewares
 server.use(express.json())
 server.use(cookieParser())
+server.use(cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    credentials: true
+}))
 
-server.get("/health", (req:Request, res: Response) : void => {
+// Health check
+server.get("/health", (_, res) => {
     res.status(HTTP_STATUS.OK).json({
-        message:"Server is running"
+        status: 'success',
+        message: "Server is running"
     })
 })
 
 
-//API routes
-server.use("/auth", authRouter)
-server.use("/products", productRouter)
+const PORT = process.env.PORT || 5000
 
-const PORT = process.env.PORT
+const startServer = async () => {
+    try {
+        await connectDB()
+        server.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`)
+        })
+    } catch (error) {
+        console.error('Failed to start server:', error)
+        process.exit(1)
+    }
+}
 
-server.listen(PORT, () => {
-    console.log("Server listen on PORT :", PORT)
-    connectDB()
-})
+startServer()
