@@ -1,4 +1,3 @@
-import Navbar from "./components/Navbar"
 import { Routes, Route, Navigate } from "react-router-dom"
 import HomePage from "./pages/HomePage"
 import LoginPage from "./pages/LoginPage"
@@ -7,8 +6,10 @@ import ProfilePage from "./pages/ProfilePage"
 import { Toaster } from "react-hot-toast"
 import { useAuthStore } from "./store/authStore"
 import { useEffect } from "react"
+import { PromoBanner } from "./components/PromotionalBanner"
+import { Navbar } from "./components/Navbar"
 
-export function App() {
+function App() {
   const { checkAuthUser , authUser , isCheckingAuth} = useAuthStore()
   
   useEffect(() => {
@@ -22,6 +23,7 @@ export function App() {
 
   return (
     <>
+      <PromoBanner/>
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -35,4 +37,6 @@ export function App() {
     
   )
 }
+
+export default App
 
