@@ -17,13 +17,13 @@ export const ModalPopup: React.FC<ModalProps> = ({
     const previousActiveElement = useRef<HTMLElement | null>(null)
 
     useEffect(() => {
-        const handleEscape = (e: KeyboardEvent) => {
+        const handleEscape = async  (e: KeyboardEvent) => {
             if (closeOnEscape && e.key === "Escape") {
                 onClose()
             }
         }
 
-        const handleTab = (e: KeyboardEvent) => {
+        const handleTab = async (e: KeyboardEvent) => {
             if (!modalRef.current) return
 
             const focusableElements = modalRef.current.querySelectorAll(
