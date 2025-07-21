@@ -1,18 +1,17 @@
-import { Toaster } from "react-hot-toast"
-import { PromoBanner } from "./components/PromotionalBanner"
-import { Navbar } from "./components/Navbar"
-import AppRoutes from "./routes/Approutes"
+import { Toaster } from "react-hot-toast";
+import PromoBanner from "./utils/PromotionalBanner";
+import AppRoutes from "./routes/AppRoutes";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
     <>
-      <PromoBanner/>
+      <PromoBanner />
       <Navbar />
-      <AppRoutes/>
-      <Toaster/>
+      <AppRoutes />
+      <Toaster />
     </>
-  )
+  );
 }
 
-export default App
-
+export default App;

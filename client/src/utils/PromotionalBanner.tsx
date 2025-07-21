@@ -1,4 +1,4 @@
-export const PromoBanner = () => {
+const PromoBanner = () => {
   return (
     <div className="w-full bg-red-600 overflow-hidden">
       <div className="flex w-max whitespace-nowrap animate-scroll">
@@ -9,5 +9,7 @@ export const PromoBanner = () => {
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
+
+export default PromoBanner;
