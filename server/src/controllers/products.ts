@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { HTTP_STATUS } from "../utils/statusCodes"
-import { addNewProduct  ,updateProductbyId ,deleteProductbyId , fetchAllProducts , fetchProductById} from "../services/product"
+import { addNewProduct  ,updateProductById ,deleteProductById , fetchAllProducts , fetchProductById} from "../services/product"
 
 // #region admin routes
 
@@ -34,7 +34,7 @@ export const updateProduct = async (req: Request, res: Response): Promise<void> 
     try {
         const { name, description, price, imageUrl, stock, isAvailable } = req.body
 
-        const updated = await updateProductbyId(
+        const updated = await updateProductById(
             req.params.id, {
                 name , description , price , imageUrl , stock , isAvailable
             }
@@ -62,7 +62,7 @@ export const deleteProduct = async (req: Request, res: Response): Promise<void> 
      * Admin only can access and delete any specific product 
      */
     try {
-        const deleted = await deleteProductbyId(req.params.id)
+        const deleted = await deleteProductById(req.params.id)
         if (!deleted) {
             res.status(HTTP_STATUS.NOT_FOUND).json({ message: "Product not found" })
             return
@@ -100,7 +100,7 @@ export const getAllProducts = async (req: Request, res: Response): Promise<void>
     }
 }
 
-export const getProductbyId = async (req: Request, res: Response): Promise<void> => {
+export const getProductById = async (req: Request, res: Response): Promise<void> => {
     /**
      * Returns specific product by its Id
      */
