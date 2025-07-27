@@ -207,7 +207,7 @@ export const updateAddress = async (
     res.status(HTTP_STATUS.OK).json({
       success: false,
       message: "Address updated",
-      data: { address: result },
+      data: { result },
     });
     return;
   } catch (err) {

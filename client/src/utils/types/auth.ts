@@ -1,4 +1,5 @@
 import { type IUser } from "./user";
+
 //registerform interface
 export interface IRegisterForm {
   name: string;
@@ -6,6 +7,7 @@ export interface IRegisterForm {
   phone: string;
   password: string;
 }
+
 //Login form interface
 export interface ILoginForm {
   emailOrPhone: string;
@@ -18,7 +20,7 @@ export interface IPasswordUpdateForm {
 }
 
 // Auth Store interface
-export interface IUseAuthStore {
+export interface IAuthStore {
   authUser: IUser | null;
   isSigningUp: boolean;
   isLoggingIn: boolean;
@@ -28,8 +30,8 @@ export interface IUseAuthStore {
   signup: (formData: IRegisterForm) => Promise<void>;
   login: (formData: ILoginForm) => Promise<void>;
   logout: () => Promise<void>;
-  checkAuthUser: () => Promise<void>;
   updatePassword: (formData: IPasswordUpdateForm) => Promise<void>;
+  checkAuthUser: () => Promise<void>;
 }
 
 //Login/Signup popup interface
