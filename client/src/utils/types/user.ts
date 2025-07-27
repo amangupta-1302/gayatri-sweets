@@ -6,7 +6,7 @@ export interface IUser {
   email?: string;
   password: string;
   role: "admin" | "customer";
-  addresses: [];
+  addresses?: [];
 }
 
 // user addresses
@@ -22,4 +22,20 @@ export interface IUserAddress {
   isDefault?: boolean;
   customLabel?: string;
   label: "Home" | "Work" | "Other";
+}
+
+export type CreateAddressPayload = Omit<IUserAddress, "_id" | "isDefault">;
+
+export interface IAddressStore {
+  //state
+  addresses: IUserAddress[];
+  isLoading: boolean;
+  // selectedAddress: IUserAddress | null;
+
+  // Actions
+  fetchAddresses: () => Promise<void>;
+  addAddress: (addressData: CreateAddressPayload) => Promise<void>;
+  deleteAddress: (id: string) => Promise<void>;
+  // getAddress: (id: string) => Promise<void>;
+  updateAddress: (id: string, updates: Partial<IUserAddress>) => Promise<void>;
 }

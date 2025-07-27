@@ -4,12 +4,12 @@ import { toast } from "react-hot-toast";
 import * as authService from "../services/auth";
 import type {
   ILoginForm,
-  IUseAuthStore,
+  IAuthStore,
   IRegisterForm,
   IPasswordUpdateForm,
 } from "../utils/types/auth";
 
-export const useAuthStore = create<IUseAuthStore>()(
+export const useAuthStore = create<IAuthStore>()(
   devtools(
     persist(
       (set) => ({

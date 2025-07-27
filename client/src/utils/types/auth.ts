@@ -20,7 +20,7 @@ export interface IPasswordUpdateForm {
 }
 
 // Auth Store interface
-export interface IUseAuthStore {
+export interface IAuthStore {
   authUser: IUser | null;
   isSigningUp: boolean;
   isLoggingIn: boolean;

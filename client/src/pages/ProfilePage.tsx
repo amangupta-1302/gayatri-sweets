@@ -2,7 +2,7 @@ import { useAuthStore } from "../store/authStore";
 import { useState } from "react";
 import { Lock, Mail, MapPin, Phone, UserCircle } from "lucide-react";
 import PasswordUpdateModal from "../modals/PasswordUpdateModal";
-import AddressManager from "../components/AddressManager";
+import AddressManager from "../components/AddressManager/AddressManager";
 
 const ProfilePage = () => {
   const { authUser } = useAuthStore();

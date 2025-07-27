@@ -1,6 +1,7 @@
 import { useAuthStore } from "../store/authStore";
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import { customModalContent } from "../utils/constants";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -14,9 +15,15 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   useEffect(() => {
     if (hasHydrated && !isCheckingAuth && !authUser) {
       // Dispatch custom event to opne login modal
+      const modalContent = customModalContent(location.pathname);
       window.dispatchEvent(
         new CustomEvent("openLoginModal", {
           detail: {
+            context: {
+              route: location.pathname,
+              title: modalContent.title,
+              message: modalContent.message,
+            },
             onClose: () => setShouldRedirect(true),
             // redirect when modal closes
           },
@@ -74,7 +81,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
               </div>
             </div>
             <h2 className="text-xl font-semibold text-gray-800 mb-2">
-              Authentication Required
+              Login Required !
             </h2>
             <p className="text-gray-600 mb-4">
               Please login or create an account to access this page

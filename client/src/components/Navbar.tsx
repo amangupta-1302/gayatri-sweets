@@ -1,5 +1,5 @@
 import { Menu, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   UserRound,
   LogIn,
@@ -9,54 +9,67 @@ import {
   UserCircle,
   Package,
 } from "lucide-react";
-import { useAuthStore } from "../store/authStore";
-import { useNavigate } from "react-router-dom";
 import LoginModal from "../modals/LoginModal";
 import SignupModal from "../modals/SignupModal";
 import LogoutModal from "../modals/LogoutModal";
+import { useNavbarActions } from "../hooks/useNavbarActions";
 
 const Navbar = () => {
-  const { authUser } = useAuthStore();
-  const navigate = useNavigate();
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showSignupModal, setShowSignupModal] = useState(false);
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const {
+    authUser,
+    formModal,
+    onLoginClick,
+    onLogoutClick,
+    onProfileClick,
+    actionLoginClose,
+    handleLogoutConfirm,
+    actionSignupClose,
+    switchToLogin,
+    switchToSignup,
+    closeLogoutModal,
+  } = useNavbarActions();
 
-  const onLoginClick = () => {
-    setShowLoginModal(true);
+  const [protectedRouteCallback, setProtectedRouteCallback] = useState<
+    (() => void) | null
+  >(null);
+
+  useEffect(() => {
+    const handleOpenLogin = (event: CustomEvent) => {
+      onLoginClick();
+
+      //store the callback if provided from protected Route
+      if (event.detail?.onClose) {
+        setProtectedRouteCallback(() => event.detail.onClose);
+      }
+    };
+    window.addEventListener("openLoginModal", handleOpenLogin as EventListener);
+    return () => {
+      window.removeEventListener(
+        "openLoginModal",
+        handleOpenLogin as EventListener
+      );
+    };
+  }, [onLoginClick]);
+
+  const handleLoginClose = () => {
+    actionLoginClose();
+
+    if (protectedRouteCallback && !authUser) {
+      //dispatchEvent to trigger callback
+      window.dispatchEvent(new CustomEvent("loginModalClose"));
+      protectedRouteCallback();
+      setProtectedRouteCallback(null);
+    }
   };
 
-  const closeAll = () => {
-    setShowLoginModal(false);
-    setShowSignupModal(false);
-    setShowLogoutModal(false);
-  };
+  const handleSignupClose = () => {
+    actionSignupClose();
 
-  const switchToLogin = () => {
-    setShowSignupModal(false);
-    setTimeout(() => {
-      setShowLoginModal(true), 200;
-    });
-  };
-
-  const switchToSignup = () => {
-    setShowLoginModal(false);
-    setTimeout(() => {
-      setShowSignupModal(true), 200;
-    });
-  };
-
-  const onProfileClick = () => {
-    navigate("/profile");
-  };
-
-  const onLogoutClick = async () => {
-    setShowLogoutModal(true);
-  };
-
-  const handleLogoutConfirm = () => {
-    setShowLogoutModal(false);
-    navigate("/"); // navigate to home page
+    if (protectedRouteCallback && !authUser) {
+      window.dispatchEvent(new CustomEvent("loginModalClose"));
+      protectedRouteCallback();
+      setProtectedRouteCallback(null);
+    }
   };
 
   return (
@@ -182,18 +195,20 @@ const Navbar = () => {
 
       {/*  LOGIN MODAL */}
       <LoginModal
-        isOpen={showLoginModal}
-        onClose={closeAll}
+        isOpen={formModal.showLoginModal}
+        onClose={handleLoginClose}
         onSwitchToSignup={switchToSignup}
       />
+      {/* SIGNUP MODAL */}
       <SignupModal
-        isOpen={showSignupModal}
-        onClose={closeAll}
+        isOpen={formModal.showSignupModal}
+        onClose={handleSignupClose}
         onSwitchToLogin={switchToLogin}
       />
+      {/* LOGOUT MODAL */}
       <LogoutModal
-        isOpen={showLogoutModal}
-        onClose={() => setShowLogoutModal(false)}
+        isOpen={formModal.showLogoutModal}
+        onClose={closeLogoutModal}
         onConfirm={handleLogoutConfirm}
       />
     </>
